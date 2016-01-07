@@ -30,6 +30,11 @@ module.exports = AtomRefactoringTools =
 
     if editor = atom.workspace.getActiveTextEditor()
       editor.cutSelectedText()
+
+      # TODO: This implementation needs to be completely rewritten.
+      @modalPanel.hide()
+      @atomRefactoringToolsView.getElement().textContent = 'Name for the new method:'
+      @modalPanel = atom.workspace.addModalPanel(item: @atomRefactoringToolsView.getElement(), visible: false)
       @modalPanel.show()
 
   toggle: ->

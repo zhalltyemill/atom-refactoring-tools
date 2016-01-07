@@ -85,3 +85,4 @@ describe "AtomRefactoringTools", ->
         jasmine.attachToDOM(workspaceElement)
         extractModal = workspaceElement.querySelector('.atom-refactoring-tools')
         expect(extractModal).toBeVisible()
+        expect(extractModal).toHaveText 'Name for the new method:'
