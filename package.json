@@ -2,7 +2,7 @@
   "name": "atom-refactoring-tools",
   "main": "./lib/atom-refactoring-tools",
   "version": "0.0.0",
-  "description": "A short description of your package",
+  "description": "Refactoring tools for Atom",
   "keywords": [
   ],
   "activationCommands": {

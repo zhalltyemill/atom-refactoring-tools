@@ -1,3 +1,3 @@
-## 0.1.0 - First Release
-* Every feature added
-* Every bug fixed
+# Change Log
+All notable changes to this project will be documented in this file, in the format recommended at http://keepachangelog.com/.
+This project adheres to [Semantic Versioning](http://semver.org/).
