@@ -80,3 +80,8 @@ describe "AtomRefactoringTools", ->
       it 'cuts the selection to the clipboard', ->
         expect(@editor.getText()).toBe ''
         expect(atom.clipboard.read()).toBe @selectedText
+
+      it 'shows a modal panel', ->
+        jasmine.attachToDOM(workspaceElement)
+        extractModal = workspaceElement.querySelector('.atom-refactoring-tools')
+        expect(extractModal).toBeVisible()

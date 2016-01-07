@@ -27,8 +27,10 @@ module.exports = AtomRefactoringTools =
 
   extractMethod: ->
     console.log 'atom-refactoring-tools:extract-method'
+
     if editor = atom.workspace.getActiveTextEditor()
       editor.cutSelectedText()
+      @modalPanel.show()
 
   toggle: ->
     console.log 'AtomRefactoringTools was toggled!'
