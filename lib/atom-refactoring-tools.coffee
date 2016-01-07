@@ -15,6 +15,7 @@ module.exports = AtomRefactoringTools =
 
     # Register command that toggles this view
     @subscriptions.add atom.commands.add 'atom-workspace', 'atom-refactoring-tools:toggle': => @toggle()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'atom-refactoring-tools:extract-method': => @extractMethod()
 
   deactivate: ->
     @modalPanel.destroy()
@@ -23,6 +24,11 @@ module.exports = AtomRefactoringTools =
 
   serialize: ->
     atomRefactoringToolsViewState: @atomRefactoringToolsView.serialize()
+
+  extractMethod: ->
+    console.log 'atom-refactoring-tools:extract-method'
+    if editor = atom.workspace.getActiveTextEditor()
+      editor.cutSelectedText()
 
   toggle: ->
     console.log 'AtomRefactoringTools was toggled!'

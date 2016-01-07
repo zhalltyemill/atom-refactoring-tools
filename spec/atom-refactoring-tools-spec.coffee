@@ -60,3 +60,23 @@ describe "AtomRefactoringTools", ->
         expect(atomRefactoringToolsElement).toBeVisible()
         atom.commands.dispatch workspaceElement, 'atom-refactoring-tools:toggle'
         expect(atomRefactoringToolsElement).not.toBeVisible()
+
+  describe 'atom-refactoring-tools:extract-method', ->
+    describe 'text is selected', ->
+      beforeEach ->
+        @selectedText = 'Here is some selected text!'
+        workspace = atom.workspace
+        waitsForPromise ->
+          workspace.open()
+        runs ->
+          @editor = workspace.getActiveTextEditor()
+
+          # TODO: we need to test with not all the text selected
+          @editor.setText @selectedText
+          @editor.selectAll()
+          atom.commands.dispatch workspaceElement, 'atom-refactoring-tools:extract-method'
+          waitsForPromise -> activationPromise
+
+      it 'cuts the selection to the clipboard', ->
+        expect(@editor.getText()).toBe ''
+        expect(atom.clipboard.read()).toBe @selectedText

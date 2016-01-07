@@ -6,7 +6,10 @@
   "keywords": [
   ],
   "activationCommands": {
-    "atom-workspace": "atom-refactoring-tools:toggle"
+    "atom-workspace": [
+      "atom-refactoring-tools:toggle",
+      "atom-refactoring-tools:extract-method"
+    ]
   },
   "repository": "https://github.com/atom/atom-refactoring-tools",
   "license": "MIT",
