@@ -13,9 +13,7 @@ module.exports = AtomRefactoringTools =
     # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
     @subscriptions = new CompositeDisposable
 
-    # Register command that toggles this view
     @subscriptions.add atom.commands.add 'atom-workspace',
-      'atom-refactoring-tools:toggle': => @toggle(),
       'atom-refactoring-tools:extract-method': => @extractMethod(),
       'core:cancel': => @modalPanel.hide()
       'core:confirm': =>
@@ -53,11 +51,3 @@ module.exports = AtomRefactoringTools =
       @modalPanel = atom.workspace.addModalPanel(item: @atomRefactoringToolsView.getElement(), visible: false)
       @modalPanel.show()
       element.querySelector('atom-text-editor').focus()
-
-  toggle: ->
-    console.log 'AtomRefactoringTools was toggled!'
-
-    if @modalPanel.isVisible()
-      @modalPanel.hide()
-    else
-      @modalPanel.show()

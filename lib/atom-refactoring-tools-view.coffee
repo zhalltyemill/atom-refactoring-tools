@@ -5,12 +5,6 @@ class AtomRefactoringToolsView
     element = document.createElement('div')
     element.classList.add('atom-refactoring-tools')
 
-    # Create message element
-    message = document.createElement('div')
-    message.textContent = "The AtomRefactoringTools package is Alive! It's ALIVE!"
-    message.classList.add('message')
-    element.appendChild(message)
-
     @getElement = ->
       element
 

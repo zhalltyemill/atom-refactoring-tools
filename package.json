@@ -7,7 +7,6 @@
   ],
   "activationCommands": {
     "atom-workspace": [
-      "atom-refactoring-tools:toggle",
       "atom-refactoring-tools:extract-method"
     ]
   },
