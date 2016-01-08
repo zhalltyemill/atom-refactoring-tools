@@ -14,8 +14,12 @@ module.exports = AtomRefactoringTools =
     @subscriptions = new CompositeDisposable
 
     # Register command that toggles this view
-    @subscriptions.add atom.commands.add 'atom-workspace', 'atom-refactoring-tools:toggle': => @toggle()
-    @subscriptions.add atom.commands.add 'atom-workspace', 'atom-refactoring-tools:extract-method': => @extractMethod()
+    @subscriptions.add atom.commands.add 'atom-workspace',
+      'atom-refactoring-tools:toggle': => @toggle(),
+      'atom-refactoring-tools:extract-method': => @extractMethod()
+    @subscriptions.add atom.commands.add '.atom-refactoring-tools atom-text-editor[mini]', 'core:confirm': =>
+      console.log 'core:confirm from refactoring'
+
 
   deactivate: ->
     @modalPanel.destroy()
@@ -33,9 +37,14 @@ module.exports = AtomRefactoringTools =
 
       # TODO: This implementation needs to be completely rewritten.
       @modalPanel.hide()
-      @atomRefactoringToolsView.getElement().textContent = 'Name for the new method:'
+      element = @atomRefactoringToolsView.getElement()
+      element.innerHTML = """
+        Name for the new method:
+        <atom-text-editor mini />
+      """
       @modalPanel = atom.workspace.addModalPanel(item: @atomRefactoringToolsView.getElement(), visible: false)
       @modalPanel.show()
+      element.querySelector('atom-text-editor').focus()
 
   toggle: ->
     console.log 'AtomRefactoringTools was toggled!'

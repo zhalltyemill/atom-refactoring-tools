@@ -77,12 +77,13 @@ describe "AtomRefactoringTools", ->
           atom.commands.dispatch workspaceElement, 'atom-refactoring-tools:extract-method'
           waitsForPromise -> activationPromise
 
-      it 'cuts the selection to the clipboard', ->
-        expect(@editor.getText()).toBe ''
-        expect(atom.clipboard.read()).toBe @selectedText
-
       it 'shows a modal panel', ->
         jasmine.attachToDOM(workspaceElement)
         extractModal = workspaceElement.querySelector('.atom-refactoring-tools')
         expect(extractModal).toBeVisible()
-        expect(extractModal).toHaveText 'Name for the new method:'
+        expect(extractModal.textContent).toContain 'Name for the new method:'
+        expect(extractModal).toContain 'atom-text-editor[mini]'
+
+      it 'cuts the selection to the clipboard', ->
+        expect(@editor.getText()).toBe ''
+        expect(atom.clipboard.read()).toBe @selectedText
