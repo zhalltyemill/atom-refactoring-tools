@@ -84,6 +84,23 @@ describe "AtomRefactoringTools", ->
         expect(extractModal.textContent).toContain 'Name for the new method:'
         expect(extractModal).toContain 'atom-text-editor[mini]'
 
-      it 'cuts the selection to the clipboard', ->
-        expect(@editor.getText()).toBe ''
-        expect(atom.clipboard.read()).toBe @selectedText
+      it 'does not change the text yet', ->
+        expect(@editor.getText()).toBe @selectedText
+
+      describe 'accept modal', ->
+        beforeEach ->
+          @methodName = 'foo_bar'
+          workspaceElement.querySelector('.atom-refactoring-tools atom-text-editor[mini]').getModel().setText @methodName
+          atom.commands.dispatch workspaceElement, 'core:confirm'
+
+        it 'dismisses the modal', ->
+          extractModal = workspaceElement.querySelector('.atom-refactoring-tools')
+          expect(extractModal).not.toBeVisible()
+
+        it 'cuts the selection to the clipboard, with the method name', ->
+          expect(@editor.getText()).toBe ''
+          expect(atom.clipboard.read()).toBe """
+            def #{@methodName}
+              #{@selectedText}
+            end
+          """

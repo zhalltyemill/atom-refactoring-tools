@@ -16,10 +16,19 @@ module.exports = AtomRefactoringTools =
     # Register command that toggles this view
     @subscriptions.add atom.commands.add 'atom-workspace',
       'atom-refactoring-tools:toggle': => @toggle(),
-      'atom-refactoring-tools:extract-method': => @extractMethod()
-    @subscriptions.add atom.commands.add '.atom-refactoring-tools atom-text-editor[mini]', 'core:confirm': =>
-      console.log 'core:confirm from refactoring'
-
+      'atom-refactoring-tools:extract-method': => @extractMethod(),
+      'core:confirm': =>
+        @modalPanel.hide()
+        if editor = atom.workspace.getActiveTextEditor()
+          methodName = @atomRefactoringToolsView.getElement().querySelector('atom-text-editor[mini]').getModel().getText()
+          editor.cutSelectedText()
+          methodBody = atom.clipboard.read()
+          extractedMethod = """
+            def #{methodName}
+              #{methodBody}
+            end
+          """
+          atom.clipboard.write extractedMethod
 
   deactivate: ->
     @modalPanel.destroy()
@@ -32,9 +41,7 @@ module.exports = AtomRefactoringTools =
   extractMethod: ->
     console.log 'atom-refactoring-tools:extract-method'
 
-    if editor = atom.workspace.getActiveTextEditor()
-      editor.cutSelectedText()
-
+    if atom.workspace.getActiveTextEditor()
       # TODO: This implementation needs to be completely rewritten.
       @modalPanel.hide()
       element = @atomRefactoringToolsView.getElement()
