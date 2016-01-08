@@ -17,6 +17,7 @@ module.exports = AtomRefactoringTools =
     @subscriptions.add atom.commands.add 'atom-workspace',
       'atom-refactoring-tools:toggle': => @toggle(),
       'atom-refactoring-tools:extract-method': => @extractMethod(),
+      'core:cancel': => @modalPanel.hide()
       'core:confirm': =>
         @modalPanel.hide()
         if editor = atom.workspace.getActiveTextEditor()
