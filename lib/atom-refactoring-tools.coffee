@@ -47,7 +47,7 @@ module.exports = AtomRefactoringTools =
       @modalPanel.hide()
       element = @atomRefactoringToolsView.getElement()
       element.innerHTML = """
-        Name for the new method:
+        <label>Name for the new method:</label>
         <atom-text-editor mini />
       """
       @modalPanel = atom.workspace.addModalPanel(item: @atomRefactoringToolsView.getElement(), visible: false)
