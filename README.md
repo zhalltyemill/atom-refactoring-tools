@@ -7,8 +7,8 @@ Eventually, this package will contain a complete suite of refactoring tools, alt
 ## Currently implemented refactorings
 
 | Refactoring      | CoffeeScript | JavaScript | Ruby | ... |
-|:-----------------|:-------------|:-----------|:-----|:----|
-| [Extract Method] |              |            | ✓    |     |
+|:-----------------|:------------:|:----------:|:----:|:----|
+| [Extract Method] |              |            |  ✓   |     |
 | ...              |              |            |      |     |
 
 [Extract Method]: http://refactoring.com/catalog/extractMethod.html
