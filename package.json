@@ -1,7 +1,7 @@
 {
   "name": "atom-refactoring-tools",
   "main": "./lib/atom-refactoring-tools",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Refactoring tools for Atom",
   "keywords": [],
   "activationCommands": {
@@ -9,7 +9,7 @@
       "atom-refactoring-tools:extract-method"
     ]
   },
-  "repository": "https://github.com/atom/atom-refactoring-tools",
+  "repository": "https://github.com/marnen/atom-refactoring-tools",
   "license": "MIT",
   "engines": {
     "atom": ">=1.0.0 <2.0.0"
