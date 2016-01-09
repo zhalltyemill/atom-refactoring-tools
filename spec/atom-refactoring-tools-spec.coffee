@@ -1,5 +1,5 @@
 AtomRefactoringTools = require '../lib/atom-refactoring-tools'
-
+require 'jasmine-set'
 # Use the command `window:run-package-specs` (cmd-alt-ctrl-p) to run specs.
 #
 # To run a specific `it` or `describe` block add an `f` to the front (e.g. `fit`
@@ -14,8 +14,9 @@ describe "AtomRefactoringTools", ->
 
   describe 'atom-refactoring-tools:extract-method', ->
     describe 'text is selected', ->
+      set 'selectedText', -> 'Here is some selected text!'
+
       beforeEach ->
-        @selectedText = 'Here is some selected text!'
         workspace = atom.workspace
         waitsForPromise ->
           workspace.open()
@@ -23,7 +24,7 @@ describe "AtomRefactoringTools", ->
           @editor = workspace.getActiveTextEditor()
 
           # TODO: we need to test with not all the text selected
-          @editor.setText @selectedText
+          @editor.setText selectedText
           @editor.selectAll()
           atom.commands.dispatch workspaceElement, 'atom-refactoring-tools:extract-method'
           waitsForPromise -> activationPromise
@@ -36,7 +37,7 @@ describe "AtomRefactoringTools", ->
         expect(extractModal).toContain 'atom-text-editor[mini]'
 
       it 'does not change the text yet', ->
-        expect(@editor.getText()).toBe @selectedText
+        expect(@editor.getText()).toBe selectedText
 
       describe 'accept modal', ->
         beforeEach ->
@@ -52,9 +53,27 @@ describe "AtomRefactoringTools", ->
           expect(@editor.getText()).toBe ''
           expect(atom.clipboard.read()).toBe """
             def #{@methodName}
-              #{@selectedText}
+              #{selectedText}
             end
           """
+
+        describe 'multiple lines', ->
+          set 'selectedText', -> """
+            line one
+            line two
+              line three
+            line four
+          """
+
+          it 'indents all lines equally', ->
+            expect(atom.clipboard.read()).toBe """
+              def #{@methodName}
+                line one
+                line two
+                  line three
+                line four
+              end
+            """
 
       describe 'cancel modal', ->
         it 'does not keep the last typed method name', ->
