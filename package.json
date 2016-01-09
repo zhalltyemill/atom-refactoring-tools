@@ -15,7 +15,8 @@
     "atom": ">=1.0.0 <2.0.0"
   },
   "dependencies": {
-    "indent-string": "^2.1.0"
+    "indent-string": "^2.1.0",
+    "strip-indent": "^1.0.1"
   },
   "devDependencies": {
     "jasmine-set": "^0.1.11"

@@ -1,6 +1,7 @@
 AtomRefactoringToolsView = require './atom-refactoring-tools-view'
 {CompositeDisposable} = require 'atom'
 indentString = require 'indent-string'
+stripIndent = require 'strip-indent'
 
 module.exports = AtomRefactoringTools =
   atomRefactoringToolsView: null
@@ -45,7 +46,8 @@ module.exports = AtomRefactoringTools =
       methodName = @atomRefactoringToolsView.getElement().querySelector('atom-text-editor[mini]').getModel().getText()
       editor.cutSelectedText()
       methodBody = atom.clipboard.read()
-      indentedMethodBody = indentString methodBody, '  '
+      strippedMethodBody = stripIndent methodBody
+      indentedMethodBody = indentString strippedMethodBody, '  '
       extractedMethod = """
         def #{methodName}
         #{indentedMethodBody}

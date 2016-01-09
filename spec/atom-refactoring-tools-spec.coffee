@@ -1,5 +1,7 @@
-AtomRefactoringTools = require '../lib/atom-refactoring-tools'
 require 'jasmine-set'
+
+AtomRefactoringTools = require '../lib/atom-refactoring-tools'
+indentString = require 'indent-string'
 # Use the command `window:run-package-specs` (cmd-alt-ctrl-p) to run specs.
 #
 # To run a specific `it` or `describe` block add an `f` to the front (e.g. `fit`
@@ -40,6 +42,8 @@ describe "AtomRefactoringTools", ->
         expect(@editor.getText()).toBe selectedText
 
       describe 'accept modal', ->
+        set 'clipboard', atom.clipboard.read
+
         beforeEach ->
           @methodName = 'foo_bar'
           workspaceElement.querySelector('.atom-refactoring-tools atom-text-editor[mini]').getModel().setText @methodName
@@ -51,29 +55,37 @@ describe "AtomRefactoringTools", ->
 
         it 'cuts the selection to the clipboard, with the method name', ->
           expect(@editor.getText()).toBe ''
-          expect(atom.clipboard.read()).toBe """
+          expect(clipboard).toBe """
             def #{@methodName}
               #{selectedText}
             end
           """
 
         describe 'multiple lines', ->
-          set 'selectedText', -> """
+          multilineText = """
             line one
             line two
               line three
             line four
           """
+          set 'selectedText', -> multilineText
 
           it 'indents all lines equally', ->
-            expect(atom.clipboard.read()).toBe """
+            expect(clipboard).toBe """
               def #{@methodName}
-                line one
-                line two
-                  line three
-                line four
+              #{indentString selectedText, '  '}
               end
             """
+
+          describe 'nonzero indent', ->
+            set 'selectedText', -> indentString multilineText, '      '
+
+            it 'strips the existing indent before indenting', ->
+              expect(clipboard).toBe """
+                def #{@methodName}
+                #{indentString multilineText, '  '}
+                end
+              """
 
       describe 'cancel modal', ->
         it 'does not keep the last typed method name', ->
