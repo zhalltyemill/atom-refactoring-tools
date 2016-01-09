@@ -55,3 +55,12 @@ describe "AtomRefactoringTools", ->
               #{@selectedText}
             end
           """
+
+      describe 'cancel modal', ->
+        it 'does not keep the last typed method name', ->
+          miniEditor = workspaceElement.querySelector('.atom-refactoring-tools atom-text-editor[mini]').getModel()
+          miniEditor.setText 'some dummy text'
+          atom.commands.dispatch workspaceElement, 'core:cancel'
+          atom.commands.dispatch workspaceElement, 'atom-refactoring-tools:extract-method'
+          miniEditor = workspaceElement.querySelector('.atom-refactoring-tools atom-text-editor[mini]').getModel()
+          expect(miniEditor.getText()).toBe ''

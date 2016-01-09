@@ -43,11 +43,7 @@ module.exports = AtomRefactoringTools =
     if atom.workspace.getActiveTextEditor()
       # TODO: This implementation needs to be completely rewritten.
       @modalPanel.hide()
-      element = @atomRefactoringToolsView.getElement()
-      element.innerHTML = """
-        <label>Name for the new method:</label>
-        <atom-text-editor mini />
-      """
-      @modalPanel = atom.workspace.addModalPanel(item: @atomRefactoringToolsView.getElement(), visible: false)
+      element = @atomRefactoringToolsView.reset().getElement()
+      @modalPanel = atom.workspace.addModalPanel(item: element, visible: false)
       @modalPanel.show()
       element.querySelector('atom-text-editor').focus()

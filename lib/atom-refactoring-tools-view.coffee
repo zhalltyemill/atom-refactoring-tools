@@ -1,12 +1,19 @@
 module.exports =
 class AtomRefactoringToolsView
   constructor: (serializedState) ->
-    # Create root element
-    element = document.createElement('div')
-    element.classList.add('atom-refactoring-tools')
-
     @getElement = ->
       element
+
+    @reset = ->
+      element.innerHTML = """
+        <label>Name for the new method:</label>
+        <atom-text-editor mini />
+      """
+      @
+
+    element = document.createElement('div')
+    element.classList.add('atom-refactoring-tools')
+    @reset()
 
     # Tear down any state and detach
     @destroy = ->
