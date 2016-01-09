@@ -17,17 +17,7 @@ module.exports = AtomRefactoringTools =
       'atom-refactoring-tools:extract-method': => @extractMethod(),
       'core:cancel': => @modalPanel.hide()
       'core:confirm': =>
-        @modalPanel.hide()
-        if editor = atom.workspace.getActiveTextEditor()
-          methodName = @atomRefactoringToolsView.getElement().querySelector('atom-text-editor[mini]').getModel().getText()
-          editor.cutSelectedText()
-          methodBody = atom.clipboard.read()
-          extractedMethod = """
-            def #{methodName}
-              #{methodBody}
-            end
-          """
-          atom.clipboard.write extractedMethod
+        @extractMethodFinish()
 
   deactivate: ->
     @modalPanel.destroy()
@@ -47,3 +37,16 @@ module.exports = AtomRefactoringTools =
       @modalPanel = atom.workspace.addModalPanel(item: element, visible: false)
       @modalPanel.show()
       element.querySelector('atom-text-editor').focus()
+
+  extractMethodFinish: ->
+    @modalPanel.hide()
+    if editor = atom.workspace.getActiveTextEditor()
+      methodName = @atomRefactoringToolsView.getElement().querySelector('atom-text-editor[mini]').getModel().getText()
+      editor.cutSelectedText()
+      methodBody = atom.clipboard.read()
+      extractedMethod = """
+        def #{methodName}
+          #{methodBody}
+        end
+      """
+      atom.clipboard.write extractedMethod
