@@ -3,10 +3,11 @@
   "main": "./lib/atom-refactoring-tools",
   "version": "0.0.0",
   "description": "Refactoring tools for Atom",
-  "keywords": [
-  ],
+  "keywords": [],
   "activationCommands": {
-    "atom-workspace": "atom-refactoring-tools:toggle"
+    "atom-workspace": [
+      "atom-refactoring-tools:extract-method"
+    ]
   },
   "repository": "https://github.com/atom/atom-refactoring-tools",
   "license": "MIT",
@@ -14,5 +15,10 @@
     "atom": ">=1.0.0 <2.0.0"
   },
   "dependencies": {
+    "indent-string": "^2.1.0",
+    "strip-indent": "^1.0.1"
+  },
+  "devDependencies": {
+    "jasmine-set": "^0.1.11"
   }
 }

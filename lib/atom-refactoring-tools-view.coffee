@@ -1,22 +1,23 @@
 module.exports =
 class AtomRefactoringToolsView
   constructor: (serializedState) ->
-    # Create root element
-    @element = document.createElement('div')
-    @element.classList.add('atom-refactoring-tools')
+    @getElement = ->
+      element
 
-    # Create message element
-    message = document.createElement('div')
-    message.textContent = "The AtomRefactoringTools package is Alive! It's ALIVE!"
-    message.classList.add('message')
-    @element.appendChild(message)
+    @reset = ->
+      element.innerHTML = """
+        <label>Name for the new method:</label>
+        <atom-text-editor mini />
+      """
+      @
+
+    element = document.createElement('div')
+    element.classList.add('atom-refactoring-tools')
+    @reset()
+
+    # Tear down any state and detach
+    @destroy = ->
+      element.remove()
 
   # Returns an object that can be retrieved when package is activated
   serialize: ->
-
-  # Tear down any state and detach
-  destroy: ->
-    @element.remove()
-
-  getElement: ->
-    @element

@@ -1,5 +1,7 @@
-AtomRefactoringTools = require '../lib/atom-refactoring-tools'
+require 'jasmine-set'
 
+AtomRefactoringTools = require '../lib/atom-refactoring-tools'
+indentString = require 'indent-string'
 # Use the command `window:run-package-specs` (cmd-alt-ctrl-p) to run specs.
 #
 # To run a specific `it` or `describe` block add an `f` to the front (e.g. `fit`
@@ -12,51 +14,84 @@ describe "AtomRefactoringTools", ->
     workspaceElement = atom.views.getView(atom.workspace)
     activationPromise = atom.packages.activatePackage('atom-refactoring-tools')
 
-  describe "when the atom-refactoring-tools:toggle event is triggered", ->
-    it "hides and shows the modal panel", ->
-      # Before the activation event the view is not on the DOM, and no panel
-      # has been created
-      expect(workspaceElement.querySelector('.atom-refactoring-tools')).not.toExist()
+  describe 'atom-refactoring-tools:extract-method', ->
+    describe 'text is selected', ->
+      set 'selectedText', -> 'Here is some selected text!'
 
-      # This is an activation event, triggering it will cause the package to be
-      # activated.
-      atom.commands.dispatch workspaceElement, 'atom-refactoring-tools:toggle'
+      beforeEach ->
+        workspace = atom.workspace
+        waitsForPromise ->
+          workspace.open()
+        runs ->
+          @editor = workspace.getActiveTextEditor()
 
-      waitsForPromise ->
-        activationPromise
+          # TODO: we need to test with not all the text selected
+          @editor.setText selectedText
+          @editor.selectAll()
+          atom.commands.dispatch workspaceElement, 'atom-refactoring-tools:extract-method'
+          waitsForPromise -> activationPromise
 
-      runs ->
-        expect(workspaceElement.querySelector('.atom-refactoring-tools')).toExist()
+      it 'shows a modal panel', ->
+        jasmine.attachToDOM(workspaceElement)
+        extractModal = workspaceElement.querySelector('.atom-refactoring-tools')
+        expect(extractModal).toBeVisible()
+        expect(extractModal.textContent).toContain 'Name for the new method:'
+        expect(extractModal).toContain 'atom-text-editor[mini]'
 
-        atomRefactoringToolsElement = workspaceElement.querySelector('.atom-refactoring-tools')
-        expect(atomRefactoringToolsElement).toExist()
+      it 'does not change the text yet', ->
+        expect(@editor.getText()).toBe selectedText
 
-        atomRefactoringToolsPanel = atom.workspace.panelForItem(atomRefactoringToolsElement)
-        expect(atomRefactoringToolsPanel.isVisible()).toBe true
-        atom.commands.dispatch workspaceElement, 'atom-refactoring-tools:toggle'
-        expect(atomRefactoringToolsPanel.isVisible()).toBe false
+      describe 'accept modal', ->
+        set 'clipboard', atom.clipboard.read
 
-    it "hides and shows the view", ->
-      # This test shows you an integration test testing at the view level.
+        beforeEach ->
+          @methodName = 'foo_bar'
+          workspaceElement.querySelector('.atom-refactoring-tools atom-text-editor[mini]').getModel().setText @methodName
+          atom.commands.dispatch workspaceElement, 'core:confirm'
 
-      # Attaching the workspaceElement to the DOM is required to allow the
-      # `toBeVisible()` matchers to work. Anything testing visibility or focus
-      # requires that the workspaceElement is on the DOM. Tests that attach the
-      # workspaceElement to the DOM are generally slower than those off DOM.
-      jasmine.attachToDOM(workspaceElement)
+        it 'dismisses the modal', ->
+          extractModal = workspaceElement.querySelector('.atom-refactoring-tools')
+          expect(extractModal).not.toBeVisible()
 
-      expect(workspaceElement.querySelector('.atom-refactoring-tools')).not.toExist()
+        it 'cuts the selection to the clipboard, with the method name', ->
+          expect(@editor.getText()).toBe ''
+          expect(clipboard).toBe """
+            def #{@methodName}
+              #{selectedText}
+            end
+          """
 
-      # This is an activation event, triggering it causes the package to be
-      # activated.
-      atom.commands.dispatch workspaceElement, 'atom-refactoring-tools:toggle'
+        describe 'multiple lines', ->
+          multilineText = """
+            line one
+            line two
+              line three
+            line four
+          """
+          set 'selectedText', -> multilineText
 
-      waitsForPromise ->
-        activationPromise
+          it 'indents all lines equally', ->
+            expect(clipboard).toBe """
+              def #{@methodName}
+              #{indentString selectedText, '  '}
+              end
+            """
 
-      runs ->
-        # Now we can test for view visibility
-        atomRefactoringToolsElement = workspaceElement.querySelector('.atom-refactoring-tools')
-        expect(atomRefactoringToolsElement).toBeVisible()
-        atom.commands.dispatch workspaceElement, 'atom-refactoring-tools:toggle'
-        expect(atomRefactoringToolsElement).not.toBeVisible()
+          describe 'nonzero indent', ->
+            set 'selectedText', -> indentString multilineText, '      '
+
+            it 'strips the existing indent before indenting', ->
+              expect(clipboard).toBe """
+                def #{@methodName}
+                #{indentString multilineText, '  '}
+                end
+              """
+
+      describe 'cancel modal', ->
+        it 'does not keep the last typed method name', ->
+          miniEditor = workspaceElement.querySelector('.atom-refactoring-tools atom-text-editor[mini]').getModel()
+          miniEditor.setText 'some dummy text'
+          atom.commands.dispatch workspaceElement, 'core:cancel'
+          atom.commands.dispatch workspaceElement, 'atom-refactoring-tools:extract-method'
+          miniEditor = workspaceElement.querySelector('.atom-refactoring-tools atom-text-editor[mini]').getModel()
+          expect(miniEditor.getText()).toBe ''
