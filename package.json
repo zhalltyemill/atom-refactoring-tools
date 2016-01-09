@@ -1,7 +1,7 @@
 {
   "name": "atom-refactoring-tools",
   "main": "./lib/atom-refactoring-tools",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Refactoring tools for Atom",
   "keywords": [],
   "activationCommands": {
