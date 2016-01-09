@@ -4,6 +4,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+## 0.0.3 / 2016-01-09
+
 * Fix year on license and add name.
 
 ## 0.0.2 / 2016-01-09
