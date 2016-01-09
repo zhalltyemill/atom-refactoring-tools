@@ -1,4 +1,6 @@
-Copyright (c) 2015 Marnen E. Laibow-Koser <marnen@marnen.org>
+The MIT License (MIT)
+
+Copyright © 2016 Marnen E. Laibow-Koser <marnen@marnen.org>
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

@@ -4,6 +4,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+* Fix year on license and add name.
+
 ## 0.0.2 / 2016-01-09
 
 * Minor layout change to README.
