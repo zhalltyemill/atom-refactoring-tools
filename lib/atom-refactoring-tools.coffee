@@ -27,7 +27,7 @@ module.exports = AtomRefactoringTools =
     @atomRefactoringToolsView.destroy()
 
   serialize: ->
-    atomRefactoringToolsViewState: @atomRefactoringToolsView.serialize()
+    atomRefactoringToolsView State: @atomRefactoringToolsView.serialize()
 
   extractMethod: ->
     console.log 'atom-refactoring-tools:extract-method'
